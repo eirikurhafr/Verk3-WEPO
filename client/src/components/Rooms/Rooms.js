@@ -7,7 +7,7 @@ class Rooms extends React.Component {
         const { socket } = this.context;
         socket.on('roomlist', roomList => this.setState({ 
             roomList: Object.keys(roomList).map(key => { 
-                return { roomName: key, ...roomList[key] }
+                console.log( { roomName: key, ...roomList[key] });
             })
         }));
     }
@@ -23,7 +23,10 @@ class Rooms extends React.Component {
         const { socket } = this.context;
         console.log(this.state.room);
         this.state.roomName = this.state.room;
-        socket.emit('roomlist', this.state.roomName);
+        socket.emit('joinroom', {room:this.state.room, pass:undefined}, available => {
+            console.log('available ', available);
+        })
+        console.log(this.state.roomList);
         this.forceUpdate();
     }
     render() {

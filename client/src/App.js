@@ -22,9 +22,13 @@ class App extends React.Component {
     render() {
         return ( 
             <div className="container">
-                <Login />
-                <ChatWindow />
-                <Rooms currentRoom={this.getCurrentRoom.bind(this)}/>
+                <div className="logRooms">
+                    <Login />
+                    <Rooms currentRoom={this.getCurrentRoom.bind(this)}/>
+                </div>
+                <div className="chatRooms">
+                    <ChatWindow />
+                </div>
             </div>
         );
     }
