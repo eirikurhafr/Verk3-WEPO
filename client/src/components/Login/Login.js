@@ -18,6 +18,7 @@ class Login extends React.Component {
         this.state = {
             user: '',
             loggedIn: false,
+            errorMsg: '',
             usernames: []
         };
     }
@@ -28,16 +29,21 @@ class Login extends React.Component {
             if (available) {
                 console.log('login')
                 this.state.loggedIn = true;
+                this.state.errorMsg = ''
                 this.forceUpdate();
             } else {
                 console.log('not login')
+                this.state.errorMsg = 'Username Taken';
                 this.state.loggedIn = false;
+                console.log(this.state.errorMsg);
+                this.forceUpdate();
             }
         })
         console.log(this.state.user);
     }
     render() {
         const { usernames, user } = this.state;
+        console.log('errormsg: ', this.state.errorMsg);
         if(this.state.loggedIn == false) {
             return (
                 <div className="login-box">
@@ -47,6 +53,7 @@ class Login extends React.Component {
                         value={user}
                         className="adduser"
                         onInput={(e) => this.setState({ user: e.target.value })} />
+                    <h4 id="login-error">{this.state.errorMsg}</h4>
                     <button type="button" className="btn pull-right" onClick={() => this.adduser()}>Set nickname</button>
                 </div>
             );
