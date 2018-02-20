@@ -25,17 +25,13 @@ class Login extends React.Component {
     adduser() {
         const { socket } = this.context;
         socket.emit('adduser', this.state.user, (available) => {
-            console.log('available ', available);
             if (available) {
-                console.log('login')
                 this.state.loggedIn = true;
                 this.state.errorMsg = ''
                 this.forceUpdate();
             } else {
-                console.log('not login')
                 this.state.errorMsg = 'Username Taken';
                 this.state.loggedIn = false;
-                console.log(this.state.errorMsg);
                 this.forceUpdate();
             }
         })
@@ -43,18 +39,18 @@ class Login extends React.Component {
     }
     render() {
         const { usernames, user } = this.state;
-        console.log('errormsg: ', this.state.errorMsg);
         if(this.state.loggedIn == false) {
             return (
                 <div className="login-box">
                     {usernames.map(u => ( <div key={u}>{u}</div> ))}
+                    <p>Select username:</p>
                     <input
                         type="text"
                         value={user}
                         className="adduser"
                         onInput={(e) => this.setState({ user: e.target.value })} />
                     <h4 id="login-error">{this.state.errorMsg}</h4>
-                    <button type="button" className="btn pull-right" onClick={() => this.adduser()}>Set nickname</button>
+                    <button type="button" className="btn pull-left" onClick={() => this.adduser()}>Set nickname</button>
                 </div>
             );
         } else if(this.state.loggedIn == true) {

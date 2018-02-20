@@ -40,7 +40,7 @@ class Rooms extends React.Component {
                     value={room}
                     className="roomlist"
                     onInput={(e) => this.setState({ room: e.target.value })} />
-                <button type="button" className="btn pull-right" onClick={() => this.addroom()}>Add Room</button>
+                <button type="button" className="btn pull-left" onClick={() => this.addroom()}>Add Room</button>
             </div>
         );
     }
