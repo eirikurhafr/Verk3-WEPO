@@ -5,18 +5,19 @@ class Rooms extends React.Component {
     componentDidMount() {
         // Register emission handler
         const { socket } = this.context;
-        socket.on('roomlist', roomList => this.setState({ 
-            roomList: Object.keys(roomList).map(key => { 
-                console.log( { roomName: key, ...roomList[key] });
-            })
+        socket.on('roomlist', rooms => this.setState({
+            rooms: Object.keys(rooms).map(key => {
+                return { name: key, ...rooms[key] } 
+            }) 
         }));
+        socket.emit('rooms');
     }
     constructor(props) {
         super(props);
         this.state = {
             room: '',
             roomName: 'Lobby',
-            roomList: []
+            rooms: []
         };
     }
     addroom() {
@@ -26,14 +27,22 @@ class Rooms extends React.Component {
         socket.emit('joinroom', {room:this.state.room, pass:undefined}, available => {
             console.log('available ', available);
         })
-        console.log(this.state.roomList);
+        console.log(this.state.rooms);
         this.forceUpdate();
     }
+    showRooms() {
+        var op = ''
+        for(var i in this.state.rooms) {
+            op += '<option>' + this.state.rooms[i]['name'] +'</option>';
+        }
+        document.getElementById('rooms').innerHTML = op;
+        this.forceUpdate();
+    }
+    
     render() {
-        const { roomList, room } = this.state;
+        const { room } = this.state;
         return (
             <div className="Rooms-box">
-                {roomList.map(u => ( <div key={u}>{u}</div> ))}
                 <h3>Active room: {this.state.roomName}</h3>
                 <input
                     type="text"
@@ -41,6 +50,9 @@ class Rooms extends React.Component {
                     className="roomlist"
                     onInput={(e) => this.setState({ room: e.target.value })} />
                 <button type="button" className="btn pull-left" onClick={() => this.addroom()}>Add Room</button>
+                <select id="rooms" onClick={() => this.showRooms()}>
+                    <option>Lobby</option>
+                </select>
             </div>
         );
     }

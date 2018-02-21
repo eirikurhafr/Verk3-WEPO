@@ -10,7 +10,6 @@ class Login extends React.Component {
             let usernames = Object.assign([], this.state.usernames);
             usernames.push(user);
             this.setState({ usernames });
-            
         });
     }
     constructor(props) {
