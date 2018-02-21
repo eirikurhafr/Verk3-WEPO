@@ -10,10 +10,9 @@ class Rooms extends React.Component {
                 return { name: key, ...rooms[key] } 
             }) 
         }));
-        this.forceUpdate();
-
         socket.emit('rooms');
     }
+
     constructor(props) {
         super(props);
         this.state = {
@@ -30,7 +29,6 @@ class Rooms extends React.Component {
         })
         this.state.roomName = roomToJoin;
         this.forceUpdate();
-
     }
 
     addroom() {
@@ -40,9 +38,8 @@ class Rooms extends React.Component {
         console.log(this.state.rooms);
         this.context.socket.emit('rooms');
         this.showRooms();
-        this.forceUpdate();
-
     }
+
     showRooms() {
         this.state.rooms.forEach(element => {
             if(document.getElementById(element['name']) == null) {
@@ -74,10 +71,7 @@ class Rooms extends React.Component {
                 <button type="button" className="btn pull-left" onClick={() => this.addroom()}>Add Room</button>
                 <button type="button" id="rooms" className="btn" onClick={() => this.showRooms()}>Show Available Rooms</button>
                 <div id="roomsBtn"></div>
-            </div>
-            
-            
-           
+            </div> 
         );
     }
 };
