@@ -27,8 +27,13 @@ class Rooms extends React.Component {
         socket.emit('joinroom', {room:roomToJoin, pass:undefined}, available => {
             console.log('available ', available);
         })
+      //  socket.emit('partroom', this.state.roomName);
         this.state.roomName = roomToJoin;
         this.forceUpdate();
+    }
+
+    leveRoom() {
+        this.joinRoom('lobby');
     }
 
     addroom() {
@@ -69,6 +74,7 @@ class Rooms extends React.Component {
                     className="roomlist"
                     onInput={(e) => this.setState({ room: e.target.value })} />
                 <button type="button" className="btn pull-left" onClick={() => this.addroom()}>Add Room</button>
+                <button type="button" className="btn pull-left" onClick={() => this.leveRoom()()}>Leve Room</button>
                 <button type="button" id="rooms" className="btn" onClick={() => this.showRooms()}>Show Available Rooms</button>
                 <div id="roomsBtn"></div>
             </div> 
