@@ -28,41 +28,36 @@ class Rooms extends React.Component {
         socket.emit('joinroom', {room:roomToJoin, pass:undefined}, available => {
             console.log('available ', available);
         })
+        this.state.roomName = roomToJoin;
         this.forceUpdate();
+
     }
 
     addroom() {
-        
         console.log(this.state.room);
         this.state.roomName = this.state.room;
         this.joinRoom(this.state.room);
         console.log(this.state.rooms);
         this.context.socket.emit('rooms');
-        this.forceUpdate();
         this.showRooms();
+        this.forceUpdate();
+
     }
     showRooms() {
-        for(var i in this.state.rooms) {
-            if(document.getElementById(this.state.rooms[i]['name']) == null) {
+        this.state.rooms.forEach(element => {
+            if(document.getElementById(element['name']) == null) {
                 var node = document.createElement('BUTTON');
-                var textnode = document.createTextNode(this.state.rooms[i]['name']);
-                node.id = this.state.rooms[i]['name'];
-                const { socket } = this.context;
-                var name2  = this.state.roomName;
-                var newname = node.id;
+                var textnode = document.createTextNode(element['name']);
+                node.id = element['name'];
                 node.addEventListener('click', function() {
-                    socket.emit('joinroom', {room:node.id, pass:undefined}, joined => {
-                        console.log('joined ', joined);
-                        name2 = newname;
-                        console.log(name2);
-                    })
-                });
-                this.state.roomName = name2;
+                    this.joinRoom(node.id);
+                }.bind(this));
+                console.log(this.state.roomName);
                 this.forceUpdate();
                 node.appendChild(textnode);
                 document.getElementById('roomsBtn').appendChild(node);
             }
-        }
+        });
         this.forceUpdate();
     }
 
