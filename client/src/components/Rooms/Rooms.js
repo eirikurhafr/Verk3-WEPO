@@ -10,6 +10,8 @@ class Rooms extends React.Component {
                 return { name: key, ...rooms[key] } 
             }) 
         }));
+        this.forceUpdate();
+
         socket.emit('rooms');
     }
     constructor(props) {
@@ -20,29 +22,54 @@ class Rooms extends React.Component {
             rooms: []
         };
     }
-    addroom() {
+
+    joinRoom(roomToJoin) {
         const { socket } = this.context;
-        console.log(this.state.room);
-        this.state.roomName = this.state.room;
-        socket.emit('joinroom', {room:this.state.room, pass:undefined}, available => {
+        socket.emit('joinroom', {room:roomToJoin, pass:undefined}, available => {
             console.log('available ', available);
         })
-        console.log(this.state.rooms);
         this.forceUpdate();
+    }
+
+    addroom() {
+        
+        console.log(this.state.room);
+        this.state.roomName = this.state.room;
+        this.joinRoom(this.state.room);
+        console.log(this.state.rooms);
+        this.context.socket.emit('rooms');
+        this.forceUpdate();
+        this.showRooms();
     }
     showRooms() {
-        var op = ''
         for(var i in this.state.rooms) {
-            op += '<option>' + this.state.rooms[i]['name'] +'</option>';
+            if(document.getElementById(this.state.rooms[i]['name']) == null) {
+                var node = document.createElement('BUTTON');
+                var textnode = document.createTextNode(this.state.rooms[i]['name']);
+                node.id = this.state.rooms[i]['name'];
+                const { socket } = this.context;
+                var name2  = this.state.roomName;
+                var newname = node.id;
+                node.addEventListener('click', function() {
+                    socket.emit('joinroom', {room:node.id, pass:undefined}, joined => {
+                        console.log('joined ', joined);
+                        name2 = newname;
+                        console.log(name2);
+                    })
+                });
+                this.state.roomName = name2;
+                this.forceUpdate();
+                node.appendChild(textnode);
+                document.getElementById('roomsBtn').appendChild(node);
+            }
         }
-        document.getElementById('rooms').innerHTML = op;
         this.forceUpdate();
     }
-    
+
     render() {
         const { room } = this.state;
         return (
-            <div className="Rooms-box">
+            <div id="Rooms-box">
                 <h3>Active room: {this.state.roomName}</h3>
                 <input
                     type="text"
@@ -50,10 +77,12 @@ class Rooms extends React.Component {
                     className="roomlist"
                     onInput={(e) => this.setState({ room: e.target.value })} />
                 <button type="button" className="btn pull-left" onClick={() => this.addroom()}>Add Room</button>
-                <select id="rooms" onClick={() => this.showRooms()}>
-                    <option>Lobby</option>
-                </select>
+                <button type="button" id="rooms" className="btn" onClick={() => this.showRooms()}>Show Available Rooms</button>
+                <div id="roomsBtn"></div>
             </div>
+            
+            
+           
         );
     }
 };
