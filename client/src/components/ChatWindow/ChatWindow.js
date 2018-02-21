@@ -16,12 +16,14 @@ class ChatWindow extends React.Component {
         super(props);
         this.state = {
             msg: '',
-            messages: []
+            messages: [],
         };
     }
+
     sendMessage() {
         const { socket } = this.context;
-        socket.emit('sentmsg', this.state.msg);
+        socket.emit('sendmsg', {roomName: this.props.roomName(),  msg: this.state.msg});
+        console.log(this.state.roomName, this.state.msg);
         this.setState({ msg: '' });
     }
     render() {
